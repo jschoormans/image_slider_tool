@@ -181,13 +181,12 @@ function toggleFullscreen() {
 
             if (url1) {
                 $('#url1').val(url1);
+                handleUrlFromGET(url1, '#image1');
             }
             if (url2) {
                 $('#url2').val(url2);
+                handleUrlFromGET(url2, '#image2');
             }
-            // update the images
-            handleUrlFromGET(url1, '#image1');
-            handleUrlFromGET(url2, '#image2');
 
 
         });
