@@ -6,7 +6,19 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=fullscreen" />
     <script async src="https://tally.so/widgets/embed.js"></script>
+
+    <style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+        </style>
+
 
 </head>
 <body class="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-300">
@@ -15,8 +27,8 @@
             <h1 class="text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
                 Image Slider Tool
             </h1>
-            <p class="text-xl text-base-content/70">Visual comparison tool for Before and After pictures</p>
-            <p class="text-xl text-base-content/70">Use the slider to compare the images</p>
+            <p class="text-xl text-base-content/70">Visual comparison tool for before and after pictures</p>
+            <p class="text-xl text-base-content/70">Upload your pictures and use the slider to compare the images</p>
 
         </div>
 
@@ -36,7 +48,29 @@
             </div>
         </div>
 
-        <div id="diffContainer" class="">
+        <script>
+            let isFullscreen = false;
+
+
+
+            function toggleFullscreen() {
+                console.log('toggleFullscreen');
+                // make the image slider full screen
+
+                element = document.getElementById('diffContainer');
+                if (!isFullscreen) {
+                    element.requestFullscreen();
+                    isFullscreen = true;
+                } else {
+                    document.exitFullscreen();
+                    isFullscreen = false;
+                }
+            }
+
+        </script>
+
+
+        <div id="diffContainer" class="relative">
             <div class="diff aspect-[16/9]" id="diffContainerInner">
                 <div class="diff-item-1">
                   <img id="image2" alt="daisy" src="sample_after.png" />
@@ -46,7 +80,14 @@
                 </div>
                 <div class="diff-resizer"></div>
               </div>
-              
+              <!-- Add a button to toggle widescreen mode -->
+              <button id="toggleFullscreen" class="btn btn-ghost btn-circle absolute bottom-6 right-6"
+                onclick="toggleFullscreen()"
+              >
+                <span class="material-symbols-outlined">
+                  fullscreen
+                </span>
+              </button>
         </div>
     </div>
 
@@ -102,6 +143,8 @@
             $('#file1').change(e => handleFileSelect(e, '#image1'));
             $('#file2').change(e => handleFileSelect(e, '#image2'));
         });
+
+
     </script>
 </body>
 </html>
