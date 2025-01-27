@@ -42,40 +42,41 @@ function toggleFullscreen() {
 
 </script>
 <body class="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-300">
-    <div class="container mx-auto px-4 py-8">
-        <div class="text-center mb-4">
-            <h1 class="text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
-                Image Slider Tool
-            </h1>
-            <p class="text-xl text-base-content/70">Visual comparison tool for before and after pictures</p>
-            <p class="text-xl text-base-content/70">Upload your pictures and use the slider to compare the images</p>
+    <div class="container max-w-8xl mx-auto px-4 py-8">
+        <div class="flex flex-row justify-between items-center">
+            
+                    <div class="flex-1">
+                        <h1 class="text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
+                            Image Slider Tool
+                        </h1>
+                        <p class="text-xl text-base-content/70">Visual comparison tool for before and after pictures</p>
+                        <p class="text-xl text-base-content/70">Upload your pictures and use the slider to compare the images</p>
+                    </div>
+            
+                    <div id="uploadSection" class="card bg-base-100 shadow-xl w-full max-w-2xl mx-auto">
+                        <div class="card-body">
+                            <div class="flex flex-col gap-2 md:flex-row gap-4 justify-center">
+                                <div class="flex-1 gap-2">
+                                    <div class="text-center mt-2 text-sm opacity-70">Original Image</div>
+                                    <input type="file" id="file1" accept="image/*" class="file-input file-input-sm file-input-primary w-full" />
+                                    <div class="text-center mt-2 text-sm opacity-70">Or enter URL</div>
+                                    <input type="url" id="url1" placeholder="Enter URL" class="input input-sm input-bordered w-full" />
+                                </div>
+                                <div class="flex items-center justify-center text-3xl opacity-50">↔</div>
+                                <div class="flex-1 gap-2 ">
+                                    <div class="text-center mt-2 text-sm opacity-70">Modified Image</div>
+                                    <input type="file" id="file2" accept="image/*" class="file-input file-input-sm file-input-secondary w-full" />
+                                    <div class="text-center mt-2 text-sm opacity-70">Or enter URL</div>
+                                    <input type="url" id="url2" placeholder="Enter URL" class="input input-sm input-bordered w-full" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
         </div>
 
-        <div id="uploadSection" class="card bg-base-100 shadow-xl w-full max-w-2xl mx-auto mb-8">
-            <div class="card-body">
-                <div class="flex flex-col gap-2 md:flex-row gap-4 justify-center">
-                    <div class="flex-1 gap-2">
-                        <div class="text-center mt-2 text-sm opacity-70">Original Image</div>
-                        <input type="file" id="file1" accept="image/*" class="file-input file-input-sm file-input-primary w-full" />
-                        <div class="text-center mt-2 text-sm opacity-70">Or enter URL</div>
-                        <input type="url" id="url1" placeholder="Enter URL" class="input input-sm input-bordered w-full" />
-                    </div>
-                    <div class="flex items-center justify-center text-3xl opacity-50">↔</div>
-                    <div class="flex-1 gap-2 ">
-                        <div class="text-center mt-2 text-sm opacity-70">Modified Image</div>
-                        <input type="file" id="file2" accept="image/*" class="file-input file-input-sm file-input-secondary w-full" />
-                        <div class="text-center mt-2 text-sm opacity-70">Or enter URL</div>
-                        <input type="url" id="url2" placeholder="Enter URL" class="input input-sm input-bordered w-full" />
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <script>
-        </script>
-
-
-        <div id="diffContainer" class="relative">
+        <div id="diffContainer" class="relative max-h-[80vh]">
             <div class="diff aspect-[16/9]" id="diffContainerInner">
                 <div class="diff-item-1">
                   <img id="image2" alt="daisy" src="sample_after.png" />
@@ -133,6 +134,14 @@ function toggleFullscreen() {
                 const aspectRatio = Math.max(aspectRatio1, aspectRatio2);
                 
                 $('#diffContainerInner').css('aspect-ratio', aspectRatio);
+
+                // get available space of this page
+                const pageWidth = document.body.clientWidth;
+                const pageHeight = document.body.clientHeight;
+                console.log('pageWidth', pageWidth);
+                console.log('pageHeight', pageHeight);
+
+
             }
 
             function handleFileSelect(e, targetId) {
