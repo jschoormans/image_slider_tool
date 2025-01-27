@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="luxury">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Slider Tool - Visual Comparison Tool for Before and After pictures with a slider</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-300">
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
+                Image Slider Tool
+            </h1>
+            <p class="text-xl text-base-content/70">Visual comparison tool for Before and After pictures</p>
+            <p class="text-xl text-base-content/70">Use the slider to compare the images</p>
+
+        </div>
+
+        <div id="uploadSection" class="card bg-base-100 shadow-xl w-full max-w-2xl mx-auto mb-8">
+            <div class="card-body">
+                <div class="flex flex-col md:flex-row gap-4 justify-center">
+                    <div class="flex-1">
+                        <input type="file" id="file1" accept="image/*" class="file-input file-input-primary w-full" />
+                        <div class="text-center mt-2 text-sm opacity-70">Original Image</div>
+                    </div>
+                    <div class="flex items-center justify-center text-3xl opacity-50">↔</div>
+                    <div class="flex-1">
+                        <input type="file" id="file2" accept="image/*" class="file-input file-input-secondary w-full" />
+                        <div class="text-center mt-2 text-sm opacity-70">Modified Image</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="diffContainer" class="">
+            <div class="diff aspect-[16/9]">
+                <div class="diff-item-1">
+                  <img id="image2" alt="daisy" src="https://placehold.co/600x400" />
+                </div>
+                <div class="diff-item-2">
+                  <img id="image1" alt="daisy" src="https://placehold.co/600x400" />
+                </div>
+                <div class="diff-resizer"></div>
+              </div>
+              
+        </div>
+    </div>
+
+    <footer class="text-center p-4 text-sm text-base-content/50">
+        Made with ❤️ by <a href="https://interestingpixels.com" class="hover:underline">InterestingPixels.com</a> | Images are processed locally in your browser | Thanks to <a href="https://daisyui.com" class="hover:underline">DaisyUI</a> for the slider
+    </footer>
+
+    <script>
+        $(document).ready(function() {
+            function handleFileSelect(e, targetId) {
+                const file = e.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        $(targetId).attr('src', event.target.result);
+                        if ($('#image1').attr('src') && $('#image2').attr('src')) {
+                            $('#diffContainer').fadeIn();
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            $('#file1').change(e => handleFileSelect(e, '#image1'));
+            $('#file2').change(e => handleFileSelect(e, '#image2'));
+        });
+    </script>
+</body>
+</html>
