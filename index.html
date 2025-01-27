@@ -116,6 +116,8 @@ function toggleFullscreen() {
     <script>
         $(document).ready(function() {
 
+
+
             function updateAspectRatio() {
                 const img1 = document.getElementById('image1');
                 const img2 = document.getElementById('image2');
@@ -157,10 +159,37 @@ function toggleFullscreen() {
 
             }
 
+            function handleUrlFromGET(url, targetId) {
+                $(targetId).attr('src', url);
+                updateAspectRatio();
+            }
+
+
+            
             $('#file1').change(e => handleFileSelect(e, '#image1'));
             $('#file2').change(e => handleFileSelect(e, '#image2'));
             $('#url1').change(e => handleUrlSelect(e, '#image1'));
             $('#url2').change(e => handleUrlSelect(e, '#image2'));
+
+
+            //  get url1 and url2 from the url
+            const urlParams = new URLSearchParams(window.location.search);
+            const url1 = urlParams.get('url1');
+            const url2 = urlParams.get('url2');
+            console.log(url1);
+            console.log(url2);
+
+            if (url1) {
+                $('#url1').val(url1);
+            }
+            if (url2) {
+                $('#url2').val(url2);
+            }
+            // update the images
+            handleUrlFromGET(url1, '#image1');
+            handleUrlFromGET(url2, '#image2');
+
+
         });
 
 
