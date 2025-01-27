@@ -2,7 +2,7 @@
 <html lang="en" data-theme="luxury">
 <head>
     <meta charset="UTF-8">
-    <title>Image Slider Tool - Visual Comparison Tool for Before and After pictures with a slider</title>
+    <title>Image Slider Tool - Visual Comparison Tool for before and after pictures with a slider</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -37,7 +37,7 @@
         </div>
 
         <div id="diffContainer" class="">
-            <div class="diff aspect-[16/9]">
+            <div class="diff aspect-[16/9]" id="diffContainerInner">
                 <div class="diff-item-1">
                   <img id="image2" alt="daisy" src="sample_after.png" />
                 </div>
@@ -77,6 +77,22 @@
                         $(targetId).attr('src', event.target.result);
                         if ($('#image1').attr('src') && $('#image2').attr('src')) {
                             $('#diffContainer').fadeIn();
+
+                            // Change the aspect ratio of the image slider to match the images
+                            const img1 = document.getElementById('image1');
+                            const image1Width = img1.naturalWidth;
+                            console.log(image1Width);
+                            const image1Height = img1.naturalHeight;
+                            console.log(image1Height);
+                            const img2 = document.getElementById('image2');
+                            const image2Width = img2.naturalWidth;
+                            console.log(image2Width);
+                            const image2Height = img2.naturalHeight;
+                            console.log(image2Height);
+                            const aspectRatio = Math.max(image1Width / image1Height, image2Width / image2Height);
+                            console.log(aspectRatio);
+                            $('#diffContainerInner').css('aspect-ratio', aspectRatio);
+
                         }
                     };
                     reader.readAsDataURL(file);
