@@ -21,6 +21,26 @@
 
 
 </head>
+
+<script>
+
+let isFullscreen = false;
+
+function toggleFullscreen() {
+    console.log('toggleFullscreen');
+    // make the image slider full screen
+
+    element = document.getElementById('diffContainer');
+    if (!isFullscreen) {
+        element.requestFullscreen();
+        isFullscreen = true;
+    } else {
+        document.exitFullscreen();
+        isFullscreen = false;
+    }
+}
+
+</script>
 <body class="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-300">
     <div class="container mx-auto px-4 py-8">
         <div class="text-center mb-4">
@@ -95,22 +115,6 @@
 
     <script>
         $(document).ready(function() {
-
-            let isFullscreen = false;
-
-            function toggleFullscreen() {
-                console.log('toggleFullscreen');
-                // make the image slider full screen
-
-                element = document.getElementById('diffContainer');
-                if (!isFullscreen) {
-                    element.requestFullscreen();
-                    isFullscreen = true;
-                } else {
-                    document.exitFullscreen();
-                    isFullscreen = false;
-                }
-            }
 
             function updateAspectRatio() {
                 const img1 = document.getElementById('image1');
