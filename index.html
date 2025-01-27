@@ -23,50 +23,35 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-300">
     <div class="container mx-auto px-4 py-8">
-        <div class="text-center mb-12">
+        <div class="text-center mb-4">
             <h1 class="text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
                 Image Slider Tool
             </h1>
             <p class="text-xl text-base-content/70">Visual comparison tool for before and after pictures</p>
             <p class="text-xl text-base-content/70">Upload your pictures and use the slider to compare the images</p>
-
         </div>
 
         <div id="uploadSection" class="card bg-base-100 shadow-xl w-full max-w-2xl mx-auto mb-8">
             <div class="card-body">
-                <div class="flex flex-col md:flex-row gap-4 justify-center">
-                    <div class="flex-1">
-                        <input type="file" id="file1" accept="image/*" class="file-input file-input-primary w-full" />
+                <div class="flex flex-col gap-2 md:flex-row gap-4 justify-center">
+                    <div class="flex-1 gap-2">
                         <div class="text-center mt-2 text-sm opacity-70">Original Image</div>
+                        <input type="file" id="file1" accept="image/*" class="file-input file-input-sm file-input-primary w-full" />
+                        <div class="text-center mt-2 text-sm opacity-70">Or enter URL</div>
+                        <input type="url" id="url1" placeholder="Enter URL" class="input input-sm input-bordered w-full" />
                     </div>
                     <div class="flex items-center justify-center text-3xl opacity-50">↔</div>
-                    <div class="flex-1">
-                        <input type="file" id="file2" accept="image/*" class="file-input file-input-secondary w-full" />
+                    <div class="flex-1 gap-2 ">
                         <div class="text-center mt-2 text-sm opacity-70">Modified Image</div>
+                        <input type="file" id="file2" accept="image/*" class="file-input file-input-sm file-input-secondary w-full" />
+                        <div class="text-center mt-2 text-sm opacity-70">Or enter URL</div>
+                        <input type="url" id="url2" placeholder="Enter URL" class="input input-sm input-bordered w-full" />
                     </div>
                 </div>
             </div>
         </div>
 
         <script>
-            let isFullscreen = false;
-
-
-
-            function toggleFullscreen() {
-                console.log('toggleFullscreen');
-                // make the image slider full screen
-
-                element = document.getElementById('diffContainer');
-                if (!isFullscreen) {
-                    element.requestFullscreen();
-                    isFullscreen = true;
-                } else {
-                    document.exitFullscreen();
-                    isFullscreen = false;
-                }
-            }
-
         </script>
 
 
@@ -96,12 +81,12 @@
     </footer>
 
     <!-- Add the floating button -->
-    <div class="fixed bottom-6 right-6">
+    <div class="fixed bottom-6 left-6">
         <button 
             data-tally-open="mZ1ORy" 
             data-tally-emoji-text="👋" 
             data-tally-emoji-animation="wave"
-            class="btn btn-primary btn-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 animate-bounce"
+            class="btn btn-primary btn-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 "
         >
             <span class="text-xl">👋</span>
             <span class="ml-2">Feedback</span>
@@ -110,6 +95,40 @@
 
     <script>
         $(document).ready(function() {
+
+            let isFullscreen = false;
+
+            function toggleFullscreen() {
+                console.log('toggleFullscreen');
+                // make the image slider full screen
+
+                element = document.getElementById('diffContainer');
+                if (!isFullscreen) {
+                    element.requestFullscreen();
+                    isFullscreen = true;
+                } else {
+                    document.exitFullscreen();
+                    isFullscreen = false;
+                }
+            }
+
+            function updateAspectRatio() {
+                const img1 = document.getElementById('image1');
+                const img2 = document.getElementById('image2');
+                
+                // Ensure both images have valid dimensions
+                if (img1.naturalWidth === 0 || img1.naturalHeight === 0 || 
+                    img2.naturalWidth === 0 || img2.naturalHeight === 0) {
+                    return;
+                }
+                
+                const aspectRatio1 = img1.naturalWidth / img1.naturalHeight;
+                const aspectRatio2 = img2.naturalWidth / img2.naturalHeight;
+                const aspectRatio = Math.max(aspectRatio1, aspectRatio2);
+                
+                $('#diffContainerInner').css('aspect-ratio', aspectRatio);
+            }
+
             function handleFileSelect(e, targetId) {
                 const file = e.target.files[0];
                 if (file && file.type.startsWith('image/')) {
@@ -119,29 +138,25 @@
                         if ($('#image1').attr('src') && $('#image2').attr('src')) {
                             $('#diffContainer').fadeIn();
 
-                            // Change the aspect ratio of the image slider to match the images
-                            const img1 = document.getElementById('image1');
-                            const image1Width = img1.naturalWidth;
-                            console.log(image1Width);
-                            const image1Height = img1.naturalHeight;
-                            console.log(image1Height);
-                            const img2 = document.getElementById('image2');
-                            const image2Width = img2.naturalWidth;
-                            console.log(image2Width);
-                            const image2Height = img2.naturalHeight;
-                            console.log(image2Height);
-                            const aspectRatio = Math.max(image1Width / image1Height, image2Width / image2Height);
-                            console.log(aspectRatio);
-                            $('#diffContainerInner').css('aspect-ratio', aspectRatio);
-
+                            updateAspectRatio();
                         }
                     };
                     reader.readAsDataURL(file);
                 }
             }
 
+            function handleUrlSelect(e, targetId) {
+                const url = e.target.value;
+                $(targetId).attr('src', url);
+
+                updateAspectRatio();
+
+            }
+
             $('#file1').change(e => handleFileSelect(e, '#image1'));
             $('#file2').change(e => handleFileSelect(e, '#image2'));
+            $('#url1').change(e => handleUrlSelect(e, '#image1'));
+            $('#url2').change(e => handleUrlSelect(e, '#image2'));
         });
 
 
