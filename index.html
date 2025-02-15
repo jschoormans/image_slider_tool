@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=fullscreen" />
     <script async src="https://tally.so/widgets/embed.js"></script>
 
+
     <style>
         .material-symbols-outlined {
           font-variation-settings:
@@ -17,9 +18,44 @@
           'GRAD' 0,
           'opsz' 24
         }
+        /* Add transition styles */
+        .diff-item-1 img,
+        .diff-item-2 img {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        
+        .diff-item-1 img.loaded,
+        .diff-item-2 img.loaded {
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Existing styles remain the same */
+
         </style>
 
+        
 
+<!-- Matomo -->
+<script type="text/javascript">
+    var _paq = window._paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+    _paq.push(["setCookieDomain", "*.www.interestingpixels.com"]);
+    _paq.push(["setDomains", ["*.www.interestingpixels.com"]]);
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u="//matomo.jasperschoormans.nl/";
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      _paq.push(['setSiteId', '1']);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+  </script>
+  <noscript><p><img src="//matomo.jasperschoormans.nl/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+  <!-- End Matomo Code -->
 </head>
 
 <script>
@@ -79,10 +115,10 @@ function toggleFullscreen() {
         <div id="diffContainer" class="relative max-h-[80vh]">
             <div class="diff aspect-[16/9]" id="diffContainerInner">
                 <div class="diff-item-1">
-                  <img id="image2" alt="daisy" src="sample_after.png" />
+                  <img id="image2" alt="daisy" src="sample_after.png" class="loaded" />
                 </div>
                 <div class="diff-item-2">
-                  <img id="image1" alt="daisy" src="sample_before.jpg" />
+                  <img id="image1" alt="daisy" src="sample_before.jpg" class="loaded" />
                 </div>
                 <div class="diff-resizer"></div>
               </div>
@@ -118,6 +154,8 @@ function toggleFullscreen() {
         $(document).ready(function() {
 
 
+            
+
 
             function updateAspectRatio() {
                 const img1 = document.getElementById('image1');
@@ -131,6 +169,8 @@ function toggleFullscreen() {
                 
                 const aspectRatio1 = img1.naturalWidth / img1.naturalHeight;
                 const aspectRatio2 = img2.naturalWidth / img2.naturalHeight;
+
+                // Use the minimum aspect ratio to ensure both images fit
                 const aspectRatio = Math.max(aspectRatio1, aspectRatio2);
                 
                 $('#diffContainerInner').css('aspect-ratio', aspectRatio);
@@ -149,7 +189,9 @@ function toggleFullscreen() {
                 if (file && file.type.startsWith('image/')) {
                     const reader = new FileReader();
                     reader.onload = (event) => {
+                        $(targetId).removeClass('loaded');
                         $(targetId).attr('src', event.target.result);
+                        $(targetId).addClass('loaded');
                         if ($('#image1').attr('src') && $('#image2').attr('src')) {
                             $('#diffContainer').fadeIn();
 
@@ -161,15 +203,18 @@ function toggleFullscreen() {
             }
 
             function handleUrlSelect(e, targetId) {
+                $(targetId).removeClass('loaded');
                 const url = e.target.value;
                 $(targetId).attr('src', url);
-
+                $(targetId).addClass('loaded');
                 updateAspectRatio();
 
             }
 
             function handleUrlFromGET(url, targetId) {
+                $(targetId).removeClass('loaded');
                 $(targetId).attr('src', url);
+                $(targetId).addClass('loaded');
                 updateAspectRatio();
             }
 
