@@ -33,6 +33,16 @@
 
         /* Existing styles remain the same */
 
+        /* Initially hide the diff container */
+        #diffContainerInner {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        #diffContainerInner.sized {
+            opacity: 1;
+        }
+
         </style>
 
         
@@ -77,19 +87,22 @@ function toggleFullscreen() {
 }
 
 </script>
-<body class="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-300">
-    <div class="container max-w-8xl mx-auto px-4 py-8">
-        <div class="flex flex-row justify-between items-center">
+<body class="h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-300">
+    <div class="min-h-screen mx-auto px-4 py-8 flex flex-col">
+        <div class="flex flex-col lg:flex-row justify-center items-center gap-8 mb-2">
             
-                    <div class="flex-1">
+                    <div class=" text-center lg:text-left">
                         <h1 class="text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
                             Image Slider Tool
                         </h1>
                         <p class="text-xl text-base-content/70">Visual comparison tool for before and after pictures</p>
                         <p class="text-xl text-base-content/70">Upload your pictures and use the slider to compare the images</p>
+                        <button onclick="window.location.href='https://github.com/jschoormans/Comfy-InterestingPixels'" class="btn btn-primary mt-4 hover:btn-accent hover:animate-none">
+                            Check out our ComfyUI node too!
+                        </button>
                     </div>
             
-                    <div id="uploadSection" class="card bg-base-100 shadow-xl w-full max-w-2xl mx-auto">
+                    <div id="uploadSection" class="card bg-base-100 shadow-xl w-full max-w-2xl">
                         <div class="card-body">
                             <div class="flex flex-col gap-2 md:flex-row gap-4 justify-center">
                                 <div class="flex-1 gap-2">
@@ -111,9 +124,8 @@ function toggleFullscreen() {
 
         </div>
 
-
-        <div id="diffContainer" class="relative max-h-[80vh]">
-            <div class="diff aspect-[16/9]" id="diffContainerInner">
+        <div id="diffContainer" class="relative bg-base-100 flex-grow flex items-center justify-center overflow-hidden">
+            <div class="diff w-full h-full" id="diffContainerInner" style="max-height: 70vh;">
                 <div class="diff-item-1">
                   <img id="image2" alt="daisy" src="sample_after.png" class="loaded" />
                 </div>
@@ -131,11 +143,11 @@ function toggleFullscreen() {
                 </span>
               </button>
         </div>
-    </div>
 
-    <footer class="text-center p-4 text-sm text-base-content/50">
-        Made with ❤️ by <a href="https://interestingpixels.com" class="hover:underline">InterestingPixels.com</a> | Images are processed locally in your browser | Thanks to <a href="https://daisyui.com" class="hover:underline">DaisyUI</a> for the slider | Sample Images by <a href="https://redecorly.com" class="hover:underline">Redecorly</a>
-    </footer>
+        <footer class="mt-auto text-center p-4 text-sm text-base-content/50">
+            Made with ❤️ by <a href="https://interestingpixels.com" class="hover:underline">InterestingPixels.com</a> | Images are processed locally in your browser | Thanks to <a href="https://daisyui.com" class="hover:underline">DaisyUI</a> for the slider | Sample Images by <a href="https://redecorly.com" class="hover:underline">Redecorly</a>
+        </footer>
+    </div>
 
     <!-- Add the floating button -->
     <div class="fixed bottom-6 left-6">
@@ -152,12 +164,14 @@ function toggleFullscreen() {
 
     <script>
         $(document).ready(function() {
-
-
-            
-
+            // Add image load event handlers for the initial sample images
+            $('#image1, #image2').on('load', function() {
+                $(this).addClass('loaded');
+                updateAspectRatio();
+            });
 
             function updateAspectRatio() {
+                console.log('updateAspectRatio');
                 const img1 = document.getElementById('image1');
                 const img2 = document.getElementById('image2');
                 
@@ -167,21 +181,38 @@ function toggleFullscreen() {
                     return;
                 }
                 
+
+
                 const aspectRatio1 = img1.naturalWidth / img1.naturalHeight;
                 const aspectRatio2 = img2.naturalWidth / img2.naturalHeight;
 
-                // Use the minimum aspect ratio to ensure both images fit
+                // Use the maximum aspect ratio to ensure both images fit
                 const aspectRatio = Math.max(aspectRatio1, aspectRatio2);
                 
-                $('#diffContainerInner').css('aspect-ratio', aspectRatio);
-
-                // get available space of this page
-                const pageWidth = document.body.clientWidth;
-                const pageHeight = document.body.clientHeight;
-                console.log('pageWidth', pageWidth);
-                console.log('pageHeight', pageHeight);
-
-
+                const container = document.getElementById('diffContainerInner');
+                const maxHeight = window.innerHeight * 0.7; // 70vh
+                const maxWidth = Math.min(window.innerWidth * 0.9, 1200); // 90vw with absolute max width
+                
+                let width = maxHeight * aspectRatio;
+                let height = maxHeight;
+                
+                // If width exceeds maxWidth, scale down proportionally
+                if (width > maxWidth) {
+                    width = maxWidth;
+                    height = width / aspectRatio;
+                }
+                
+                // Additional mobile check
+                if (window.innerWidth < 768) { // mobile breakpoint
+                    width = Math.min(width, window.innerWidth - 32); // account for padding
+                    height = width / aspectRatio;
+                }
+                
+                container.style.width = `${width}px`;
+                container.style.height = `${height}px`;
+                
+                // Add the sized class after setting dimensions
+                container.classList.add('sized');
             }
 
             function handleFileSelect(e, targetId) {
@@ -242,10 +273,12 @@ function toggleFullscreen() {
                 handleUrlFromGET(url2, '#image2');
             }
 
-
+            // Initial call to updateAspectRatio
+            setTimeout(updateAspectRatio, 100); // Small delay to ensure images are loaded
         });
 
-
+        // Keep the resize handler outside the ready function
+        window.addEventListener('resize', updateAspectRatio);
     </script>
 </body>
 </html>
